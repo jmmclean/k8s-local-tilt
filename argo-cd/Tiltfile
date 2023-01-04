@@ -1,0 +1,46 @@
+if k8s_context() != 'minikube':
+  fail("K8s context is not minikube")
+
+allow_k8s_contexts(contexts = ["minikube"])
+
+argo_base_yaml = kustomize("local", flags = ["--load-restrictor", "LoadRestrictionsNone", "--enable-helm"])
+
+k8s_yaml(argo_base_yaml)
+k8s_resource(workload = "argocd-applicationset-controller", labels = ["argo-cd"])
+k8s_resource(workload = "argocd-dex-server", labels = ["argo-cd"])
+k8s_resource(workload = "argocd-notifications-controller", labels = ["argo-cd"])
+k8s_resource(workload = "argocd-redis", labels = ["argo-cd"])
+k8s_resource(workload = "argocd-repo-server", labels = ["argo-cd"])
+k8s_resource(workload = "argocd-server", labels = ["argo-cd"])
+k8s_resource(workload = "argocd-application-controller", labels = ["argo-cd"])
+
+local_resource(name = 'argo-cd-ns',
+    cmd = 'kubectl get namespace | grep -q "^argo-cd" || kubectl create namespace argo-cd',
+    labels = ["argo-cd"]
+)
+local_resource(name = 'admin-secret', 
+    cmd = 'kubectl wait pods -n argo-cd -l "app.kubernetes.io/name=argocd-server" --for condition=Ready --timeout=90s \
+        && kubectl get secret argocd-initial-admin-secret -n argo-cd -o jsonpath=\'{.data.password}\' | base64 -d',
+    resource_deps = ["argocd-server", "argo-cd-ns"],
+    labels = ["argo-cd"]
+)
+
+# create repo creds for ArgoCD to use, not needed for this sample as the repo is public. Leaving for sample.
+# local_resource(name = 'argo-repo-creds',
+#     cmd = 'env | grep GITHUB_TOKEN > /dev/null 2>&1 \
+#         && kubectl create secret generic repo-creds -n argo-cd --dry-run=client -o yaml \
+#             --from-literal password=$GITHUB_TOKEN \
+#             --from-literal type=git \
+#             --from-literal url=https://github.com/jmmclean | kubectl apply -f - \
+#         && kubectl label secret repo-creds argocd.argoproj.io/secret-type=repo-creds -n argo-cd --overwrite=true',
+#     resource_deps = ["argo-cd-ns"],
+#     labels = ["argo-cd"]
+# )
+
+local_resource(name = 'argocd-app-manifest', 
+    cmd = 'kubectl wait pods -n argo-cd -l app.kubernetes.io/name=argocd-server --for condition=Ready --timeout=90s \
+        && kubectl apply -f local/minikube/application.yml',
+    resource_deps = ["argocd-server", "argo-cd-ns", "argocd-application-controller", "argocd-repo-server"],
+    labels = ["argo-cd"]
+)
+k8s_resource(workload = "argocd-server", port_forwards = 8080)

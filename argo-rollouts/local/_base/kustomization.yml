@@ -1,0 +1,12 @@
+resources:
+  - https://raw.githubusercontent.com/argoproj/argo-rollouts/v1.3.1/manifests/install.yaml
+  - https://raw.githubusercontent.com/argoproj/argo-rollouts/v1.3.1/manifests/dashboard-install.yaml
+  - https://raw.githubusercontent.com/argoproj/argo-rollouts/v1.3.1/manifests/notifications-install.yaml
+
+images:
+  - name: quay.io/argoproj/argo-rollouts
+    newTag: v1.3.1
+  - name: quay.io/argoproj/kubectl-argo-rollouts
+    newTag: v1.3.1
+
+namespace: argo-rollouts

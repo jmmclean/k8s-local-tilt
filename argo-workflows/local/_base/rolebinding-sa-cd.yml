@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: sa-cd
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: sa-cd
+subjects:
+  - kind: ServiceAccount
+    name: sa-cd
+    namespace: argo-workflows-dev

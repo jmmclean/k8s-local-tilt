@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-rollouts
+  namespace: argo-cd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/jmmclean/k8s-local-tilt.git
+    targetRevision: main
+    path: argo-rollouts/local/minikube
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argo-rollouts
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
