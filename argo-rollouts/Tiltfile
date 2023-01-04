@@ -1,0 +1,14 @@
+if k8s_context() != 'minikube':
+  fail("K8s context is not minikube")
+
+allow_k8s_contexts(contexts = ["minikube"])
+
+local_resource(name = 'argo-rollouts-ns',
+    cmd = 'kubectl get namespace | grep -q "^argo-rollouts" || kubectl create namespace argo-rollouts',
+    labels = ["argo-rollouts"]
+)
+local_resource(name = 'argo-rollouts-app-manifest', 
+    cmd = 'kubectl apply -f local/minikube/application.yml',
+    resource_deps = ["argo-rollouts-ns", "argocd-server", "argocd-application-controller", "argocd-repo-server"],
+    labels = ["argo-rollouts"]
+)   

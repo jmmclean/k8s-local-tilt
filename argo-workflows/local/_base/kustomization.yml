@@ -1,0 +1,17 @@
+resources:
+  - github.com/argoproj/argo-workflows//manifests/cluster-install?ref=v3.4.3
+  - role-sa-cd.yml
+  - rolebinding-sa-cd.yml
+  - sa-sa-cd.yml
+
+patches:
+  - patch/deployment-argo-server.yml
+  - patch/deployment-workflow-controller.yml
+
+images:
+  - name: quay.io/argoproj/argocli
+    newTag: v3.4.3
+  - name: quay.io/argoproj/workflow-controller
+    newTag: v3.4.3
+
+namespace: argo-workflows

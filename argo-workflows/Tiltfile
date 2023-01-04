@@ -1,0 +1,21 @@
+if k8s_context() != 'minikube':
+  fail("K8s context is not minikube")
+
+allow_k8s_contexts(contexts = ["minikube"])
+
+local_resource(name = 'argo-workflows-ns',
+    cmd = 'kubectl get namespace | grep -q "^argo-workflows" || kubectl create namespace argo-workflows',
+    labels = ["argo-workflows"]
+)
+# Fix this sleep in here, just exhausted from thinking ab it
+local_resource(name = 'argo-workflows-app-manifest', 
+    cmd = 'kubectl apply -f local/minikube/application.yml \
+        && sleep 10 && kubectl wait apps/argo-workflows -n argo-cd --for=jsonpath=\'{.status.health.status}\'=Healthy --timeout=90s',
+    resource_deps = ["argo-workflows-ns", "argocd-server", "argocd-application-controller", "argocd-repo-server"],
+    labels = ["argo-workflows"]
+) 
+local_resource(name = "argo-workflows-server", 
+    serve_cmd = 'kubectl -n argo-workflows port-forward deployment/argo-server 2746:2746',
+    resource_deps = ["argo-workflows-app-manifest"],
+    labels = ["argo-workflows"]
+)

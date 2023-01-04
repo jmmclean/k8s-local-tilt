@@ -1,0 +1,11 @@
+resources:
+  - github.com/argoproj/argo-cd//manifests/crds?ref=v2.5.4
+  - github.com/argoproj/argo-cd//manifests/cluster-rbac?ref=v2.5.4
+  - github.com/argoproj/argo-cd//manifests/base?ref=v2.5.4
+  - secret/repo-k8s-local-tilt.yml
+
+patchesStrategicMerge:
+  - patch/cm-argocd-cm.yml
+  - patch/cluster-rbac.yml
+
+namespace: argo-cd
