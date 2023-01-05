@@ -53,6 +53,7 @@ By default, this repository contains [argo-rollouts](https://argoproj.github.io/
 * argo-cd
 * argo-workflows
 * argo-rollouts
+
 To mutate any of these deployment configurations, users will want to test their changes my modifying the `application.yml` to have a `targetRevision` that is equal to your current branch, otherwise it will be looking at main. ([ArgoCD Application manifest](argo-cd/local/minikube/application.yml))
 > Be sure to push up your local branch!
 
