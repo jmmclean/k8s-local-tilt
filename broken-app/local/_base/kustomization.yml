@@ -1,0 +1,5 @@
+resources:
+  - https://raw.githubusercontent.com/argoproj/argo-rollouts/master/docs/getting-started/basic/rollout.yaml
+  - https://raw.githubusercontent.com/argoproj/argo-rollouts/master/docs/getting-started/basic/service.yaml
+
+namespace: argo-rollouts

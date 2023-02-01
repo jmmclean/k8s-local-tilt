@@ -13,6 +13,11 @@ w = cfg.get('with', [])
 
 # define groups for --with command
 groups = {
+    "all": [
+        "argo-rollouts",
+        "argo-workflows",
+        "broken-app"
+    ],
     "argo": [
         "argo-rollouts",
         "argo-workflows"
@@ -21,6 +26,8 @@ groups = {
 
 if 'argo' in w:
     w = groups['argo']
+if 'all' in w:
+    w = groups['all']
 
 # include common services that will ALWAYS be included by Tilt
 include('./argo-cd/Tiltfile')

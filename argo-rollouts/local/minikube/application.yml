@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/jmmclean/k8s-local-tilt.git
-    targetRevision: main
+    targetRevision: lab-broken-app
     path: argo-rollouts/local/minikube
   destination:
     server: https://kubernetes.default.svc

@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argo-cd
+  name: broken-app
   namespace: argo-cd
 spec:
-  project: default
+  project: broken
   source:
     repoURL: https://github.com/jmmclean/k8s-local-tilt.git
     targetRevision: lab-broken-app
-    path: argo-cd/local/minikube
+    path: broken-app/local/minikube
   destination:
     server: https://kubernetes.default.svc
-    namespace: argo-cd
+    namespace: broken
   syncPolicy:
     automated:
       prune: true

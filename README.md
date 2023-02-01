@@ -17,9 +17,10 @@ After all the [Prerequisites](#prerequisites) are installed, users can begin by 
 The above command will start up a Kubernetes cluster on your local docker with 4 CPUs and 16GB of memory. If your machine does not have these resources, you can change them to be more accomodating.
 > you may need to update your docker desktop [resource allocation](https://docs.docker.com/desktop/settings/mac/#resources)
 
+## Lab: Fix Broken App
 With minikube running, you should be able to run the below command (from the root of this repository):
 ```
-> tilt up
+> tilt up -- --with all
 ```
 This will automatically install ArgoCD and make ArgoCD manage itself...pretty neat! Following the instructions on your terminal, you can view the Tilt dashboard by pressing the spacebar:
 ```
@@ -35,38 +36,13 @@ Opening browser: http://localhost:10350/
 ```
 ![](.bin/tilt-up-default.png?raw=true)
 
-### Logging in to ArgoCD
+## The Problem
+You will recognize that upon [logging into ArgoCD](#logging-in-to-argocd), the dashboard page will show the `broken-app` in an `Unknown` status. The goal of this lab is for you to determine the root cause of this issue and resolve it. 
+![](.bin/argo-landing-broken.png?raw=true)
+
+## Logging into ArgoCD
 With ArgoCD being installed by default when you `tilt up`, the UI is already being forwarded to https://localhost:8080. The credentials are below:
 * username: admin
 * password: `<uniq per install...see image below>`
 
 ![](.bin/argo-cd-password.png?raw=true)
-
-## Adding More Applications
-By default, this repository contains [argo-rollouts](https://argoproj.github.io/argo-rollouts/) and [argo-workflows](https://argoproj.github.io/argo-workflows/), however they are not installed by default. We can easily add them by running the below command:
-```
-> tilt up -- --with argo
-```
-![](.bin/tilt-up-argo.png?raw=true)
-
-[After logging into Argo](#logging-in-to-argocd), users should see a total of 3 applications being managed:
-* argo-cd
-* argo-workflows
-* argo-rollouts
-
-To mutate any of these deployment configurations, users will want to test their changes my modifying the `application.yml` to have a `targetRevision` that is equal to your current branch, otherwise it will be looking at main. ([ArgoCD Application manifest](argo-cd/local/minikube/application.yml))
-> Be sure to push up your local branch!
-
-![](.bin/argo-auth-landing.png?raw=true)
-
-
-Since Tilt is orchestrating all this work, users can view the source by navigating to the [tiltfile](Tiltfile). Specifically we can find the below code, which will automatically add some other applications via the group `argo`.
-```python
-# define groups for --with command
-groups = {
-    "argo": [
-        "argo-rollouts",
-        "argo-workflows"
-    ]
-}
-```
