@@ -4,10 +4,10 @@ metadata:
   name: broken-app
   namespace: argo-cd
 spec:
-  project: broken
+  project: default
   source:
     repoURL: https://github.com/jmmclean/k8s-local-tilt.git
-    targetRevision: lab-broken-app
+    targetRevision: hennadii-fix
     path: broken-app/local/minikube
   destination:
     server: https://kubernetes.default.svc
