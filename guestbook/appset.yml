@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: guestbook
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - list:
+      elements:
+      - env: dev
+        cluster: engineering
+        url: https://kubernetes.default.svc
+      - env: prod
+        cluster: engineering
+        url: https://kubernetes.default.svc
+  template:
+    metadata:
+      name: '{{.cluster}}-{{.env}}-guestbook'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/argoproj/argo-cd.git
+        targetRevision: HEAD
+        path: applicationset/examples/list-generator/guestbook/{{.cluster}}-{{.env}}
+      destination:
+        server: '{{.url}}'
+        namespace: guestbook-{{.env}}
