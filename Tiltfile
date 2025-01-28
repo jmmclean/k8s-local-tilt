@@ -16,11 +16,18 @@ groups = {
     "argo": [
         "argo-rollouts",
         "argo-workflows"
+    ],
+    "appset": [
+        "guestbook"
     ]
 }
 
 if 'argo' in w:
-    w = groups['argo']
+    w += groups['argo']
+    w.remove('argo')
+if 'appset' in w:
+    w += groups['appset']
+    w.remove('appset')
 
 # include common services that will ALWAYS be included by Tilt
 include('./argo-cd/Tiltfile')

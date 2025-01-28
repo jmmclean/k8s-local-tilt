@@ -1,0 +1,19 @@
+if k8s_context() != 'minikube':
+  fail("K8s context is not minikube")
+
+allow_k8s_contexts(contexts = ["minikube"])
+
+local_resource(name = 'argo-guestbook-dev-ns',
+    cmd = 'kubectl get namespace | grep -q "^guestbook-dev" || kubectl create namespace guestbook-dev',
+    labels = ["argo-guestbook"]
+)
+local_resource(name = 'argo-guestbook-prod-ns',
+    cmd = 'kubectl get namespace | grep -q "^guestbook-prod" || kubectl create namespace guestbook-prod',
+    labels = ["argo-guestbook"]
+)
+
+local_resource(name = 'argo-guestbook-appset-manifest', 
+    cmd = 'kubectl apply -f appset.yml',
+    resource_deps = ["argo-guestbook-dev-ns", "argo-guestbook-prod-ns", "argocd-server", "argocd-application-controller", "argocd-repo-server"],
+    labels = ["argo-guestbook",]
+) 

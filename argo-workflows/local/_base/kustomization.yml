@@ -5,8 +5,8 @@ resources:
   - sa-sa-cd.yml
 
 patches:
-  - patch/deployment-argo-server.yml
-  - patch/deployment-workflow-controller.yml
+  - path: patch/deployment-argo-server.yml
+  - path: patch/deployment-workflow-controller.yml
 
 images:
   - name: quay.io/argoproj/argocli
