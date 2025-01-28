@@ -1,5 +1,5 @@
 if k8s_context() != 'minikube':
-  fail("K8s context is not minikube")
+    fail("K8s context is not minikube")
 
 allow_k8s_contexts(contexts = ["minikube"])
 
