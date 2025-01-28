@@ -15,7 +15,14 @@ After all the [Prerequisites](#prerequisites) are installed, users can begin by 
 > minikube start --cpus 4 --memory 16384
 ```
 The above command will start up a Kubernetes cluster on your local docker with 4 CPUs and 16GB of memory. If your machine does not have these resources, you can change them to be more accomodating.
-> you may need to update your docker desktop [resource allocation](https://docs.docker.com/desktop/settings/mac/#resources)
+> Note: you may need to update your docker desktop [resource allocation](https://docs.docker.com/desktop/settings/mac/#resources)
+
+It may be worthwhile updating your minikube to cache the ArgoCD image so that startup time is faster. To do this, run the below command (assuming argocd version is `2.13.3`):
+```
+export ARGOCD_VERSION="v2.13.3" \
+  && docker pull quay.io/argoproj/argocd:${ARGOCD_VERSION} \
+  && minikube image load quay.io/argoproj/argocd:${ARGOCD_VERSION}
+```
 
 With minikube running, you should be able to run the below command (from the root of this repository):
 ```
@@ -38,9 +45,7 @@ Opening browser: http://localhost:10350/
 ### Logging in to ArgoCD
 With ArgoCD being installed by default when you `tilt up`, the UI is already being forwarded to https://localhost:8080. The credentials are below:
 * username: admin
-* password: `<uniq per install...see image below>`
-
-![](.bin/argo-cd-password.png?raw=true)
+* password: admin
 
 ## Adding More Applications
 By default, this repository contains [argo-rollouts](https://argoproj.github.io/argo-rollouts/) and [argo-workflows](https://argoproj.github.io/argo-workflows/), however they are not installed by default. We can easily add them by running the below command:

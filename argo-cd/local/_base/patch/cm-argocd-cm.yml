@@ -5,6 +5,7 @@ kind: ConfigMap
 metadata:
   name: argocd-cm
 data:
+  application.resourceTrackingMethod: annotation
   kustomize.buildOptions: --load-restrictor LoadRestrictionsNone --enable-helm
   resource.customizations.ignoreDifferences.all: |
     managedFieldsManagers:

@@ -18,12 +18,6 @@ local_resource(name = 'argo-cd-ns',
     cmd = 'kubectl get namespace | grep -q "^argo-cd" || kubectl create namespace argo-cd',
     labels = ["argo-cd"]
 )
-local_resource(name = 'admin-secret', 
-    cmd = 'kubectl wait pods -n argo-cd -l "app.kubernetes.io/name=argocd-server" --for condition=Ready --timeout=90s \
-        && kubectl get secret argocd-initial-admin-secret -n argo-cd -o jsonpath=\'{.data.password}\' | base64 -d',
-    resource_deps = ["argocd-server", "argo-cd-ns"],
-    labels = ["argo-cd"]
-)
 
 # create repo creds for ArgoCD to use, not needed for this sample as the repo is public. Leaving for sample.
 # local_resource(name = 'argo-repo-creds',

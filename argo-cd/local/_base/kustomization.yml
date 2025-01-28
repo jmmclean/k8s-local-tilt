@@ -1,11 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
 resources:
   - github.com/argoproj/argo-cd//manifests/crds?ref=v2.13.3
   - github.com/argoproj/argo-cd//manifests/cluster-rbac?ref=v2.13.3
   - github.com/argoproj/argo-cd//manifests/base?ref=v2.13.3
   - secret/repo-k8s-local-tilt.yml
 
-patchesStrategicMerge:
-  - patch/cm-argocd-cm.yml
-  - patch/cluster-rbac.yml
+patches:
+  - path: patch/cm-argocd-cm.yml
+  - path: patch/cluster-rbac.yml
+  - path: patch/secret-argocd-secret.yml
+  - target:
+      kind: 'Deployment|StatefulSet'
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/imagePullPolicy
+        value: IfNotPresent
 
 namespace: argo-cd
